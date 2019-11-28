@@ -19,7 +19,7 @@ module Plutus
     #   GET /accounts.json
     def index
       @accounts = if params[:household_id]
-                    Account.reports(params { :household_id }).all
+                    Account.reports(params[:household_id]).all
                   else
                     Account.all
                   end
