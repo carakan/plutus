@@ -38,7 +38,6 @@ module Plutus
     has_many :entries, through: :amounts, source: :entry
     has_many :credit_entries, through: :credit_amounts, source: :entry, class_name: 'Plutus::Entry'
     has_many :debit_entries, through: :debit_amounts, source: :entry, class_name: 'Plutus::Entry'
-    scope :reports, -> {}
 
     validates_presence_of :type
 

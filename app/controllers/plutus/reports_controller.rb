@@ -15,10 +15,10 @@ module Plutus
       @from_date = first_entry ? first_entry.date : Date.today
       @to_date = params[:date] ? Date.parse(params[:date]) : Date.today
 
-      if params[:entity_id]
-        @assets = Plutus::Asset.reports(params[:entity_id]).all
-        @liabilities = Plutus::Liability.reports(params[:entity_id]).all
-        @equity = Plutus::Equity.reports(params[:entity_id]).all
+      if params[:household_id]
+        @assets = Plutus::Asset.reports(params[:household_id]).all
+        @liabilities = Plutus::Liability.reports(params[:household_id]).all
+        @equity = Plutus::Equity.reports(params[:household_id]).all
       else
         @assets = Plutus::Asset.all
         @liabilities = Plutus::Liability.all
@@ -34,9 +34,9 @@ module Plutus
       @from_date =
         params[:from_date] ? Date.parse(params[:from_date]) : Date.today.at_beginning_of_month
       @to_date = params[:to_date] ? Date.parse(params[:to_date]) : Date.today
-      if params[:entity_id]
-        @revenues = Plutus::Revenue.reports(params[:entity_id]).all
-        @expenses = Plutus::Expense.reports(params[:entity_id]).all
+      if params[:household_id]
+        @revenues = Plutus::Revenue.reports(params[:household_id]).all
+        @expenses = Plutus::Expense.reports(params[:household_id]).all
       else
         @revenues = Plutus::Revenue.reports.all
         @expenses = Plutus::Expense.reports.all

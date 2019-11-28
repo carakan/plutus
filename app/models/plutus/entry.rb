@@ -40,8 +40,6 @@ module Plutus
     validate :has_debit_amounts?
     validate :amounts_cancel?
 
-    scope :reports, -> {}
-
     # Support construction using 'credits' and 'debits' keys
     accepts_nested_attributes_for :credit_amounts, :debit_amounts, allow_destroy: true
     alias_method :credits=, :credit_amounts_attributes=
