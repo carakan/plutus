@@ -5,36 +5,44 @@ module Plutus
   # controller will inherit.
   #
   # @author Michael Bulat
-  class ReportsController <  Plutus::ApplicationController
+  class ReportsController < Plutus::ApplicationController
     unloadable
 
     # @example
     #   GET /reports/balance_sheet
     def balance_sheet
       first_entry = Plutus::Entry.order('date ASC').first
-      @from_date = first_entry ? first_entry.date: Date.today
+      @from_date = first_entry ? first_entry.date : Date.today
       @to_date = params[:date] ? Date.parse(params[:date]) : Date.today
-      @assets = Plutus::Asset.all
-      @liabilities = Plutus::Liability.all
-      @equity = Plutus::Equity.all
 
-      respond_to do |format|
-        format.html # index.html.erb
+      if params[:entity_id]
+        @assets = Plutus::Asset.reports(params[:entity_id]).all
+        @liabilities = Plutus::Liability.reports(params[:entity_id]).all
+        @equity = Plutus::Equity.reports(params[:entity_id]).all
+      else
+        @assets = Plutus::Asset.all
+        @liabilities = Plutus::Liability.all
+        @equity = Plutus::Equity.all
       end
+
+      respond_to(&:html)
     end
 
     # @example
     #   GET /reports/income_statement
     def income_statement
-      @from_date = params[:from_date] ? Date.parse(params[:from_date]) : Date.today.at_beginning_of_month
+      @from_date =
+        params[:from_date] ? Date.parse(params[:from_date]) : Date.today.at_beginning_of_month
       @to_date = params[:to_date] ? Date.parse(params[:to_date]) : Date.today
-      @revenues = Plutus::Revenue.all
-      @expenses = Plutus::Expense.all
-
-      respond_to do |format|
-        format.html # index.html.erb
+      if params[:entity_id]
+        @revenues = Plutus::Revenue.reports(params[:entity_id]).all
+        @expenses = Plutus::Expense.reports(params[:entity_id]).all
+      else
+        @revenues = Plutus::Revenue.reports.all
+        @expenses = Plutus::Expense.reports.all
       end
-    end
 
+      respond_to(&:html)
+    end
   end
 end

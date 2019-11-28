@@ -33,11 +33,12 @@ module Plutus
     class_attribute :normal_credit_balance
 
     has_many :amounts
-    has_many :credit_amounts, :extend => AmountsExtension, :class_name => 'Plutus::CreditAmount'
-    has_many :debit_amounts, :extend => AmountsExtension, :class_name => 'Plutus::DebitAmount'
+    has_many :credit_amounts, extend: AmountsExtension, class_name: 'Plutus::CreditAmount'
+    has_many :debit_amounts, extend: AmountsExtension, class_name: 'Plutus::DebitAmount'
     has_many :entries, through: :amounts, source: :entry
-    has_many :credit_entries, :through => :credit_amounts, :source => :entry, :class_name => 'Plutus::Entry'
-    has_many :debit_entries, :through => :debit_amounts, :source => :entry, :class_name => 'Plutus::Entry'
+    has_many :credit_entries, through: :credit_amounts, source: :entry, class_name: 'Plutus::Entry'
+    has_many :debit_entries, through: :debit_amounts, source: :entry, class_name: 'Plutus::Entry'
+    scope :reports, -> {}
 
     validates_presence_of :type
 
@@ -68,11 +69,11 @@ module Plutus
     #   => #<BigDecimal:103259bb8,'0.2E4',4(12)>
     #
     # @return [BigDecimal] The decimal value balance
-    def balance(options={})
+    def balance(options = {})
       if self.class == Plutus::Account
         raise(NoMethodError, "undefined method 'balance'")
       else
-        if self.normal_credit_balance ^ contra
+        if normal_credit_balance ^ contra
           credits_balance(options) - debits_balance(options)
         else
           debits_balance(options) - credits_balance(options)
@@ -94,7 +95,7 @@ module Plutus
     #   => #<BigDecimal:103259bb8,'0.1E4',4(12)>
     #
     # @return [BigDecimal] The decimal value credit balance
-    def credits_balance(options={})
+    def credits_balance(options = {})
       credit_amounts.balance(options)
     end
 
@@ -112,7 +113,7 @@ module Plutus
     #   => #<BigDecimal:103259bb8,'0.3E4',4(12)>
     #
     # @return [BigDecimal] The decimal value credit balance
-    def debits_balance(options={})
+    def debits_balance(options = {})
       debit_amounts.balance(options)
     end
 
@@ -133,12 +134,12 @@ module Plutus
     #   => #<BigDecimal:1030fcc98,'0.82875E5',8(20)>
     #
     # @return [BigDecimal] The decimal value balance
-    def self.balance(options={})
-      if self.new.class == Plutus::Account
+    def self.balance(options = {})
+      if new.class == Plutus::Account
         raise(NoMethodError, "undefined method 'balance'")
       else
-        accounts_balance = BigDecimal.new('0')
-        accounts = self.all
+        accounts_balance = BigDecimal('0')
+        accounts = all
         accounts.each do |account|
           if account.contra
             accounts_balance -= account.balance(options)
@@ -159,12 +160,15 @@ module Plutus
     #
     # @return [BigDecimal] The decimal value balance of all accounts
     def self.trial_balance
-      if self.new.class == Plutus::Account
-        Plutus::Asset.balance - (Plutus::Liability.balance + Plutus::Equity.balance + Plutus::Revenue.balance - Plutus::Expense.balance)
+      if new.class == Plutus::Account
+        Plutus::Asset.balance -
+          (
+            Plutus::Liability.balance + Plutus::Equity.balance + Plutus::Revenue.balance -
+              Plutus::Expense.balance
+          )
       else
         raise(NoMethodError, "undefined method 'trial_balance'")
       end
     end
-
   end
 end
