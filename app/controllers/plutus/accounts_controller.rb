@@ -18,12 +18,16 @@ module Plutus
     #   GET /accounts.xml
     #   GET /accounts.json
     def index
-      @accounts = Account.all
+      @accounts = if params[:household_id]
+                    Account.reports(params { :household_id }).all
+                  else
+                    Account.all
+                  end
 
       respond_to do |format|
-        format.html # index.html.erb
-        format.xml  { render :xml => @accounts }
-        format.json  { render :json => @accounts }
+        format.html
+        format.xml { render xml: @accounts }
+        format.json { render json: @accounts } # index.html.erb
       end
     end
   end

@@ -10,24 +10,31 @@ module Plutus
   # controller will inherit.
   #
   # @author Michael Bulat
-  class EntriesController <  Plutus::ApplicationController
+  class EntriesController < Plutus::ApplicationController
     unloadable
     # @example
     #   GET /entries
     #   GET /entries.xml
     #   GET /entries.json
     def index
-      if params[:order] == 'ascending'
-        order = 'ASC'
+      order = if params[:order] == 'ascending'
+                'ASC'
+              else
+                'DESC'
+              end
+      if params[:household_id]
+        @entries =
+          Entry.reports(params[:household_id]).page(params[:page]).per(params[:limit]).order(
+            "date #{order}"
+          )
       else
-        order = 'DESC'
+        @entries = Entry.page(params[:page]).per(params[:limit]).order("date #{order}")
       end
-      @entries = Entry.page(params[:page]).per(params[:limit]).order("date #{order}")
 
       respond_to do |format|
-        format.html # index.html.erb
-        format.xml  { render :xml => @entries }
-        format.json  { render :json => @entries }
+        format.html
+        format.xml { render xml: @entries }
+        format.json { render json: @entries } # index.html.erb
       end
     end
   end
