@@ -2,7 +2,7 @@
   <center>
     <h1>Income Statement</h1>
 
-    <%= form_tag({:action => 'income_statement'}, {:method => :get, :class => 'form-inline'}) do%>
+    <%= form_tag({action: 'income_statement'}, {method: :get, class: 'form-inline'}) do%>
       <div class="form-group">
       <%= label_tag :from_date, nil, class: 'sr-only'%>
       <%= text_field_tag :from_date, @from_date, :class => 'datepicker form-control', :placeholder => "Date" %>
@@ -17,8 +17,6 @@
 
   <br>
 
-  <%= render 'account', :name => "Revenues", :accounts => @revenues %>
-  <%= render 'account', :name => "Expenses", :accounts => @expenses %>
-
-
+  <%= render 'account', name: "Revenues", accounts: @revenues %>
+  <%= render 'account', name: "Expenses", accounts: @expenses %>
 </div>
