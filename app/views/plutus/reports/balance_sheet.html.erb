@@ -1,7 +1,7 @@
 <div class="container">
   <center>
     <h1>Balance Sheet</h1>
-    <%= form_tag("households/#{params[:household_id]}/reports/balance_sheet", {method: :get, class: 'form-inline'}) do %>
+    <%= form_tag("balance_sheet", {method: :get, class: 'form-inline'}) do %>
       <div class="form-group">
         <%= label_tag :date, nil, class: 'sr-only'%>
         <%= text_field_tag :date, @to_date, class: 'datepicker form-control' %>

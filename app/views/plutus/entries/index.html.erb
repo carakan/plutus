@@ -2,7 +2,7 @@
   <center>
     <h1>Journal</h1>
     <br>
-    <%= form_tag({:action => 'index'}, {:method => :get, :class => 'form-inline'}) do%>
+    <%= form_tag("", {:method => :get, :class => 'form-inline'}) do%>
       <div class="form-group">
       Per page: <%= select_tag :limit, options_for_select([25, 100, 200, 300], selected: params[:limit]), class: 'form-control' %>
       Order: <%= select_tag :order, options_for_select(['descending', 'ascending'], selected: params[:order]), class: 'form-control' %>
