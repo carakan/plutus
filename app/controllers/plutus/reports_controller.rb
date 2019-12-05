@@ -48,5 +48,9 @@ module Plutus
     def set_household
       @household = Household.find(params[:household_id])
     end
+
+    def current_user
+      current_admin_user
+    end
   end
 end
